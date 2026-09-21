@@ -26,3 +26,19 @@ def add_user(new_user: UserCreate):
  
     users.append(new_user) 
     return new_user 
+
+@app.get("/api/users") 
+def get_users(): 
+    return users 
+ 
+ 
+@app.get("/api/users/{user_id}") 
+def get_user(user_id: int): 
+    for existing_user in users: 
+        if existing_user.user_id == user_id: 
+            return existing_user 
+ 
+    raise HTTPException( 
+        status_code=status.HTTP_404_NOT_FOUND, 
+        detail="User not found", 
+    )
