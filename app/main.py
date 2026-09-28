@@ -49,9 +49,9 @@ def get_user(user_id: int):
 def delete_user(user_id: int): 
     # Use enumerate so we can find the user and remove it by index. 
     for index, existing_user in enumerate(users): 
-    if existing_user.user_id == user_id: 
-        users.pop(index) 
-        return Response(status_code=status.HTTP_204_NO_CONTENT) 
+        if existing_user.user_id == user_id: 
+            users.pop(index) 
+            return Response(status_code=status.HTTP_204_NO_CONTENT) 
 
     raise HTTPException( 
         status_code=status.HTTP_404_NOT_FOUND, 
