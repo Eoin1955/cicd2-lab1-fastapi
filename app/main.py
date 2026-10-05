@@ -56,6 +56,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
  "/api/users/{user_id}",
  status_code=status.HTTP_204_NO_CONTENT,
 )
+
 def delete_user(user_id: int, db: Session = Depends(get_db)):
  db_user = db.get(UserDB, user_id)
 
@@ -67,4 +68,3 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
  
  db.delete(db_user)
  db.commit()
- return
