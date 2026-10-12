@@ -40,4 +40,4 @@ def reset_database():
 
 @pytest.fixture 
 def client(): 
-    return TestClient(app):
+    return TestClient(app)
