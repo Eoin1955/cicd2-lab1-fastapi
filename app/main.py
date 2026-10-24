@@ -1,10 +1,13 @@
 from fastapi import Depends, FastAPI, HTTPException, status
+from sqlalchemy import exc
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.database import engine, get_db
 from app.models import Base, UserDB
 from app.schemas import UserCreate, UserRead
 from sqlalchemy import select
+import httpx
+from app.product_client import get_product_fetcher
 
 # For this lab, create the tables when the module loads.
 # We will improve application startup structure later.
@@ -68,3 +71,16 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
  
  db.delete(db_user)
  db.commit()
+
+@app.get("/api/products/{product_id}")
+def get_remote_product(
+ product_id: int,
+ product_fetcher=Depends(get_product_fetcher),
+):
+ try:
+  return product_fetcher(product_id)
+ except httpx.HTTPStatusError as exc:
+  if exc.response.status_code == 404:
+   raise HTTPException(404, "Product not found") from exc
+ except httpx.RequestError as exc:
+  raise HTTPException(503, "Product service unavailable") from exc
